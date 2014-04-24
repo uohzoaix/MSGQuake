@@ -1,6 +1,5 @@
 package com.zxq.rts.schema;
 
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import backtype.storm.spout.Scheme;
@@ -13,11 +12,7 @@ public class StringSchema implements Scheme {
 
 	@Override
 	public List<Object> deserialize(byte[] bytes) {
-		try {
-			return new Values(new String(bytes, "UTF-8"));
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
+		return new Values(bytes);
 	}
 
 	@Override
