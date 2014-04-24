@@ -26,7 +26,7 @@ public abstract class BaseConnection {
 
 	public void getConnectionFactory(ConnectionFactory connectionFactory, BaseMQConfig config, Integer retry) throws ServiceException {
 		Integer i = 0;
-		while (connectionFactory == null && i < 5) {
+		while (connectionFactory == null && i < retry) {
 			ConnectionFactory factory = new ConnectionFactory();
 			if (config.getUri() != null) {
 				try {

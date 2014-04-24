@@ -1,6 +1,5 @@
 package com.zxq.rts.rabbit.config;
 
-import java.util.Map;
 
 public class CustomeMQConfig extends BaseMQConfig {
 
