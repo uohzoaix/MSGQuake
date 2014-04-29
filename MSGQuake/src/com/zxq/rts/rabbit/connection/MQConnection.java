@@ -81,7 +81,7 @@ public class MQConnection extends BaseConnection {
 	public MQConnection(CustomeMQConfig config, CallBacker callBacker) {
 		this.callBacker = callBacker;
 		this.prefetch = config.getPrefetch();
-		this.queueName = config.getQueneName();
+		this.queueName = config.getBaseConfig().getQueneName();
 		this.requeueOnFail = config.getRequeneOnFail();
 
 		this.durable = config.getDurable();
@@ -89,7 +89,7 @@ public class MQConnection extends BaseConnection {
 		this.autoDelete = config.getAutoDelete();
 		this.autoAck = config.getAutoAck();
 		try {
-			getConnectionFactory(connectionFactory, config, 5);
+			connectionFactory = getConnectionFactory(connectionFactory, config.getBaseConfig(), 5);
 		} catch (ServiceException e) {
 			e.printStackTrace();
 		}

@@ -24,7 +24,7 @@ public abstract class BaseConnection {
 
 	public abstract void onFail(Long msgID);
 
-	public void getConnectionFactory(ConnectionFactory connectionFactory, BaseMQConfig config, Integer retry) throws ServiceException {
+	public ConnectionFactory getConnectionFactory(ConnectionFactory connectionFactory, BaseMQConfig config, Integer retry) throws ServiceException {
 		Integer i = 0;
 		while (connectionFactory == null && i < retry) {
 			ConnectionFactory factory = new ConnectionFactory();
@@ -46,11 +46,12 @@ public abstract class BaseConnection {
 				factory.setVirtualHost(config.getVirtualHost());
 				factory.setRequestedHeartbeat(config.getHeartBeat());
 			}
-			connectionFactory = factory;
+			return factory;
 		}
 		if (connectionFactory == null) {
 			throw new ServiceException("retry to getConnectionFactory for " + retry + " times,but failed!!!");
 		}
+		return null;
 	}
 
 }

@@ -22,7 +22,15 @@ public class RabbitmqBolt extends BaseRichBolt {
 
 	@Override
 	public void prepare(@SuppressWarnings("rawtypes") Map conf, TopologyContext context, OutputCollector collector) {
-		schema = (Scheme) conf.get("schema");
+		try {
+			schema = (Scheme) Class.forName((String) conf.get("schema")).newInstance();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override

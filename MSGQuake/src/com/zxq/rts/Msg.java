@@ -8,8 +8,13 @@ public class Msg {
 	private final long deliveryTag;
 
 	public Msg(Delivery delivery) {
-		this.body = delivery.getBody();
-		this.deliveryTag = delivery.getEnvelope().getDeliveryTag();
+		if (delivery == null) {
+			this.body = null;
+			this.deliveryTag = -1;
+		} else {
+			this.body = delivery.getBody();
+			this.deliveryTag = delivery.getEnvelope().getDeliveryTag();
+		}
 	}
 
 	public byte[] getBody() {

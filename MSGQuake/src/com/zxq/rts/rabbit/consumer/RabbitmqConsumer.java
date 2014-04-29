@@ -2,6 +2,7 @@ package com.zxq.rts.rabbit.consumer;
 
 import java.util.Map;
 
+import com.alibaba.fastjson.JSON;
 import com.rabbitmq.client.ConsumerCancelledException;
 import com.rabbitmq.client.ShutdownSignalException;
 import com.zxq.rts.Msg;
@@ -16,7 +17,7 @@ public class RabbitmqConsumer {
 	private MQConnection connection;
 
 	public RabbitmqConsumer(Map<String, Object> conf, CallBacker callBacker) {
-		connection = new MQConnection((CustomeMQConfig) conf.get("config"), callBacker);
+		connection = new MQConnection(JSON.parseObject((String) conf.get("config"), CustomeMQConfig.class), callBacker);
 	}
 
 	public void ack(Long msgID) {
@@ -28,11 +29,11 @@ public class RabbitmqConsumer {
 	}
 
 	public Msg nextMessage() {
-		if (connection == null)
-			connection.reCreateConnection();
-		if (connection.getConsumerTag() == null || connection.getConsumer() == null)
-			return Msg.NULL;
 		try {
+			if (connection == null)
+				connection.reCreateConnection();
+			if (connection.getConsumerTag() == null || connection.getConsumer() == null || connection.getConsumer().nextDelivery(waitForMessage) == null)
+				return Msg.NULL;
 			return new Msg(connection.getConsumer().nextDelivery(waitForMessage));
 		} catch (ShutdownSignalException sse) {
 			connection.reCreateConnection();

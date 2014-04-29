@@ -3,6 +3,7 @@ package com.zxq.rts.topology.spout;
 import java.util.List;
 import java.util.Map;
 
+import org.nutz.json.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,10 +14,12 @@ import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import backtype.storm.spout.Scheme;
 
+import com.alibaba.fastjson.JSON;
 import com.zxq.rts.Msg;
 import com.zxq.rts.rabbit.consumer.RabbitmqConsumer;
 import com.zxq.rts.rabbit.error.CallBacker;
 import com.zxq.rts.rabbit.error.ServiceException;
+import com.zxq.rts.schema.StringSchema;
 
 public class RabbitmqSpout extends BaseRichSpout {
 
@@ -73,7 +76,6 @@ public class RabbitmqSpout extends BaseRichSpout {
 		} catch (ServiceException e) {
 			logger.error("create connection with EXCEPTION", e);
 		}
-		schema = (Scheme) conf.get("schema");
 		logger = LoggerFactory.getLogger(RabbitmqSpout.class);
 		this.collector = collector;
 	}

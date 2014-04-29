@@ -7,6 +7,7 @@ import backtype.storm.Config;
 import backtype.storm.LocalCluster;
 import backtype.storm.topology.TopologyBuilder;
 
+import com.alibaba.fastjson.JSON;
 import com.zxq.rts.rabbit.config.BaseMQConfig;
 import com.zxq.rts.rabbit.config.CustomeMQConfig;
 import com.zxq.rts.rabbit.connection.BaseConnection;
@@ -30,12 +31,11 @@ public class MainTopology {
 		BaseConnection connection = new MQConnection(customeMQConfig);
 
 		Map<String, Object> valueMap = new HashMap<>();
-		valueMap.put("schema", new StringSchema());
-		valueMap.put("config", customeMQConfig);
+		valueMap.put("config", JSON.toJSONString(customeMQConfig));
+		valueMap.put("schema", "com.zxq.rts.schema.StringSchema");
 		// valueMap = BeanUtil.getFieldValueMap(valueMap, customeMQConfig);
 
 		builder.setSpout("mqSpout", new RabbitmqSpout(), 2).addConfigurations(valueMap).setMaxSpoutPending(Integer.valueOf(PropUtil.getPropVal("prefetch").toString()));
-		valueMap.put("schema", new JsonSchema());
 		builder.setBolt("mqBolt", new RabbitmqBolt(), 4).addConfigurations(valueMap).shuffleGrouping("mqSpout");
 		// builder.setBolt("statistic", new StatisticBolt(), 4).shuffleGrouping("mqSpout");
 		// builder.setBolt("ipdup", new IpDupBolt(), 4).shuffleGrouping("mqSpout");
